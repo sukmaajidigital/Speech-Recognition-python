@@ -20,7 +20,6 @@ if not API_KEY:
 genai.configure(api_key=API_KEY)
 
 def speak(text, language="id"):
-    """Menggunakan gTTS untuk mengonversi teks ke suara dan menyimpan di response.mp3, lalu memutar file audio."""
     try:
         tts = gTTS(text=text, lang=language, slow=False)
         audio_path = "response.mp3"
@@ -39,19 +38,19 @@ def recognize_speech():
             print("Mikir Sek ...")
             text = recognizer.recognize_google(audio, language="id-ID")
             print(f"Bos: {text}")
-            return text
+            return text.lower()  # Mengembalikan teks dalam huruf kecil untuk pencocokan
         except sr.UnknownValueError:
             error_msg = "Ngapunten, aku mboten mudeng."
             print(error_msg)
-            speak(error_msg)
+            # speak(error_msg)
         except sr.RequestError as e:
             error_msg = f"Ada masalah dengan layanan Speech-to-Text: {e}"
             print(error_msg)
-            speak(error_msg)
+            # speak(error_msg)
         except Exception as e:
             error_msg = f"Terjadi kesalahan: {e}"
             print(error_msg)
-            speak("Terjadi kesalahan.")
+            # speak("Terjadi kesalahan.")
         return None
 
 def process_query(query):
@@ -80,19 +79,24 @@ def process_query(query):
 
 if __name__ == "__main__":
     print("Pripun Bos?")
-    speak("Pripun Bos?")
+    speak("Pripun Boskuh?")
     try:
         while True:
             # Mendengarkan input suara
             query = recognize_speech()
             if query:
-                # Proses dan jawab pertanyaan
-                answer = process_query(query)
-                print(f"babu: {answer}")
-                speak(answer)  # Putar jawaban
+                if "wes wes cukup" in query:
+                    print("Sampun. Suwun.")
+                    speak("Sampun. Suwun!")
+                    break  # Hentikan program jika mendengar "stop"
+                else:
+                    # Proses dan jawab pertanyaan
+                    answer = process_query(query)
+                    print(f"babu: {answer}")
+                    speak(answer)  # Putar jawaban
             else:
                 print("Ngapunten, aku gak mudeng.")
-                speak("Ngapunten, aku gak mudeng.")
+                # speak("Ngapunten, aku gak mudeng.")
     except KeyboardInterrupt:
         print("\nSampun. Suwun.")
-        speak("Sampun. Suwun!")
+        # speak("Sampun. Suwun!")
