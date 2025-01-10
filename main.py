@@ -3,37 +3,39 @@ import google.api_core.exceptions
 import speech_recognition as sr
 import pyttsx3
 import absl.logging
-
+from gtts import gTTS
+import os
 # Redam log gRPC yang tidak penting
 absl.logging.set_verbosity(absl.logging.ERROR)
 
+# Load .env file
+load_dotenv()
+API_KEY = os.getenv("GENAI_API_KEY")
 # Konfigurasi API Key untuk Gemini
-genai.configure(api_key="AIzaSyDAFEmLIkWNmaXhGns0UaK2HNgpnJ1RNYM")  # Ganti dengan API key kamu!
+genai.configure(api_key=API_KEY)
 
 # Konfigurasi Text-to-Speech
 engine = pyttsx3.init()
-engine.setProperty("rate", 150)  # Kecepatan bicara
+engine.setProperty("rate", 100)  # Kecepatan bicara
 engine.setProperty("volume", 1.0)  # Volume maksimal
 
 def speak(text):
-    """Fungsi untuk mengubah teks menjadi audio dan memutar audio."""
     engine.say(text)
     engine.runAndWait()
 
 def recognize_speech():
-    """Fungsi untuk mengenali ucapan pengguna."""
     recognizer = sr.Recognizer()
     with sr.Microphone() as source:
-        print("Silakan berbicara...")
+        print("Monggo...")
         try:
             audio = recognizer.listen(source, timeout=5, phrase_time_limit=10)
-            print("Memproses audio...")
+            print("Mikir Sek ...")
             text = recognizer.recognize_google(audio, language="id-ID")
-            print(f"Kamu bilang: {text}")
+            print(f"Bos: {text}")
             return text
         except sr.UnknownValueError:
-            print("Maaf, aku tidak bisa memahami apa yang kamu katakan.")
-            speak("Maaf, aku tidak bisa memahami apa yang kamu katakan.")
+            print("Ngapunten, Mboten Mudeng.")
+            speak("Ngapunten, Mboten Mudeng.")
         except sr.RequestError as e:
             print(f"Error pada layanan Speech-to-Text: {e}")
             speak("Ada masalah dengan layanan Speech-to-Text.")
@@ -43,36 +45,43 @@ def recognize_speech():
         return None
 
 def process_query(query):
-    """Fungsi untuk memproses query pengguna menggunakan API Gemini."""
     try:
         model = genai.GenerativeModel("gemini-1.5-flash")
         result = model.generate_content(contents=[{"parts": [{"text": query}]}])
 
-        # Akses teks jawaban dari struktur respon
-        answer = result.result["candidates"][0]["content"]["parts"][0]["text"]
-        return answer.strip()  # Hapus karakter whitespace berlebih
+        # Konversi objek respons menjadi dictionary (jika mendukung)
+        result_dict = result.to_dict() if hasattr(result, "to_dict") else None
+
+        # Periksa apakah result_dict valid
+        if result_dict and "candidates" in result_dict:
+            answer = result_dict["candidates"][0]["content"]["parts"][0]["text"]
+            return answer.strip()
+        else:
+            print("DEBUG: Tidak ada kandidat respons yang valid.")
+            return "Maaf, aku belum punya jawaban untuk itu."
     except google.api_core.exceptions.PermissionDenied:
         return "Maaf, akses ditolak. Periksa izin API key kamu."
-    except (KeyError, IndexError, AttributeError):
-        print("Format respon tidak sesuai atau tidak ada jawaban yang ditemukan.")
+    except (KeyError, IndexError, AttributeError) as e:
+        print(f"DEBUG: Error accessing response structure - {e}")
         return "Maaf, tidak ada jawaban yang tersedia."
     except Exception as e:
         print(f"Kesalahan saat memproses query: {e}")
         return "Maaf, ada masalah saat memproses permintaanmu."
 
+
 if __name__ == "__main__":
-    print("Hai, apa kabar? Tanyain aja apa yang kamu pengen tau!")
-    speak("Hai, apa kabar? Tanyain aja apa yang kamu pengen tau!")
+    print("Pripun Bos?")
+    speak("Pripun Bos?")
     try:
         while True:
             query = recognize_speech()
             if query:
                 answer = process_query(query)
-                print(f"Gemini: {answer}")
+                print(f"babu: {answer}")
                 speak(answer)
             else:
-                print("Maaf, aku gak bisa ngerti apa yang kamu bilang.")
-                speak("Maaf, aku gak bisa ngerti apa yang kamu bilang.")
+                print("Ngapunten, aku gak mudeng.")
+                speak("Ngapunten, aku gak mudeng.")
     except KeyboardInterrupt:
-        print("\nSesi dihentikan. Terima kasih!")
-        speak("Sesi dihentikan. Terima kasih!")
+        print("\nSampun. Suwun.")
+        speak("Sampun. Suwun!")
