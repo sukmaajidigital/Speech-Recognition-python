@@ -4,7 +4,7 @@ from gtts import gTTS
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
 # Atur variabel lingkungan TRANSFORMERS_CACHE
-os.environ['TRANSFORMERS_CACHE'] = 'D:\\model_cache'
+os.environ['TRANSFORMERS_CACHE'] = 'D:\\model_cache_gptj'
 
 # Memuat tokenizer dan model
 tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-j-6B")
