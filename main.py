@@ -3,6 +3,9 @@ import speech_recognition as sr
 from gtts import gTTS
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
+# Atur variabel lingkungan TRANSFORMERS_CACHE
+os.environ['TRANSFORMERS_CACHE'] = 'D:\\model_cache'
+
 # Memuat tokenizer dan model
 tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-j-6B")
 model = AutoModelForCausalLM.from_pretrained("EleutherAI/gpt-j-6B")
