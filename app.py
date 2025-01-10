@@ -3,7 +3,6 @@ import google.api_core.exceptions
 import speech_recognition as sr
 from dotenv import load_dotenv
 import os
-import tempfile
 import absl.logging
 from gtts import gTTS
 import subprocess
@@ -21,15 +20,13 @@ if not API_KEY:
 genai.configure(api_key=API_KEY)
 
 def speak(text, language="id"):
-    """Menggunakan gTTS untuk mengonversi teks ke suara dan memutar file audio menggunakan aplikasi bawaan Windows."""
+    """Menggunakan gTTS untuk mengonversi teks ke suara dan menyimpan di response.mp3, lalu memutar file audio."""
     try:
         tts = gTTS(text=text, lang=language, slow=False)
-        with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as fp:
-            temp_audio_path = fp.name
-            tts.save(temp_audio_path)
+        audio_path = "response.mp3"
+        tts.save(audio_path)  # Simpan dengan nama response.mp3
         # Gunakan aplikasi bawaan Windows untuk memutar audio
-        subprocess.run(["powershell", "-c", f"Start-Process -FilePath '{temp_audio_path}' -Wait"], check=True)
-        os.unlink(temp_audio_path)  # Hapus file setelah diputar
+        subprocess.run(["start", "/wait", audio_path], shell=True, check=True)
     except Exception as e:
         print(f"Kesalahan saat memutar audio: {e}")
 
@@ -86,11 +83,13 @@ if __name__ == "__main__":
     speak("Pripun Bos?")
     try:
         while True:
+            # Mendengarkan input suara
             query = recognize_speech()
             if query:
+                # Proses dan jawab pertanyaan
                 answer = process_query(query)
                 print(f"babu: {answer}")
-                speak(answer)
+                speak(answer)  # Putar jawaban
             else:
                 print("Ngapunten, aku gak mudeng.")
                 speak("Ngapunten, aku gak mudeng.")
