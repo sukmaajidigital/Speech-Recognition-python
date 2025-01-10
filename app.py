@@ -7,24 +7,22 @@ import absl.logging
 from gtts import gTTS
 import subprocess
 
-# Load .env file
 load_dotenv()
 
-# Redam log gRPC yang tidak penting
 absl.logging.set_verbosity(absl.logging.ERROR)
 
-# Konfigurasi API Key untuk Gemini dari .env
 API_KEY = os.getenv("GENAI_API_KEY")
 if not API_KEY:
     raise ValueError("API Key untuk Google Gemini tidak ditemukan di .env file.")
 genai.configure(api_key=API_KEY)
 
+MAX_RESPONSE_LENGTH = 100
+
 def speak(text, language="id"):
     try:
         tts = gTTS(text=text, lang=language, slow=False)
         audio_path = "response.mp3"
-        tts.save(audio_path)  # Simpan dengan nama response.mp3
-        # Gunakan aplikasi bawaan Windows untuk memutar audio
+        tts.save(audio_path)
         subprocess.run(["start", "/wait", audio_path], shell=True, check=True)
     except Exception as e:
         print(f"Kesalahan saat memutar audio: {e}")
@@ -38,19 +36,16 @@ def recognize_speech():
             print("Mikir Sek ...")
             text = recognizer.recognize_google(audio, language="id-ID")
             print(f"Bos: {text}")
-            return text.lower()  # Mengembalikan teks dalam huruf kecil untuk pencocokan
+            return text.lower()
         except sr.UnknownValueError:
             error_msg = "Ngapunten, aku mboten mudeng."
             print(error_msg)
-            # speak(error_msg)
         except sr.RequestError as e:
             error_msg = f"Ada masalah dengan layanan Speech-to-Text: {e}"
             print(error_msg)
-            # speak(error_msg)
         except Exception as e:
             error_msg = f"Terjadi kesalahan: {e}"
             print(error_msg)
-            # speak("Terjadi kesalahan.")
         return None
 
 def process_query(query):
@@ -75,7 +70,16 @@ def process_query(query):
         return "Maaf, tidak ada jawaban yang tersedia."
     except Exception as e:
         print(f"Kesalahan saat memproses query: {e}")
-        return "Maaf, ada masalah saat memproses permintaanmu."
+        return "Maaf, ada masalah saat memproksikan permintaanmu."
+
+def check_and_speak(answer):
+    if len(answer) > MAX_RESPONSE_LENGTH:
+        short_answer = "Ketemu monggo diwoco piyambak." 
+        print(f"babu: {answer}")
+        speak(short_answer)
+    else:
+        print(f"babu: {answer}")
+        speak(answer)
 
 if __name__ == "__main__":
     print("Pripun Bos?")
@@ -87,16 +91,12 @@ if __name__ == "__main__":
             if query:
                 if "wes wes cukup" in query:
                     print("Sampun. Suwun.")
-                    speak("Sampun. Suwun!")
-                    break  # Hentikan program jika mendengar "stop"
+                    speak("Suwun Boskuhhh!")
+                    break 
                 else:
-                    # Proses dan jawab pertanyaan
                     answer = process_query(query)
-                    print(f"babu: {answer}")
-                    speak(answer)  # Putar jawaban
+                    check_and_speak(answer) 
             else:
                 print("Ngapunten, aku gak mudeng.")
-                # speak("Ngapunten, aku gak mudeng.")
     except KeyboardInterrupt:
         print("\nSampun. Suwun.")
-        # speak("Sampun. Suwun!")

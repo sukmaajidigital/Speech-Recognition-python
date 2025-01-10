@@ -61,22 +61,6 @@ pip install -r requirements.txt
 
 ```
 
-5. **INSTALL TORCH**
-
-```sh
-Untuk Windows dengan CUDA (jika Anda memiliki GPU NVIDIA):
-pip install torch torchvision torchaudio
-
-Untuk Windows tanpa CUDA (hanya CPU):
-pip install torch torchvision torchaudio cpuonly
-
-Untuk macOS:
-pip install torch torchvision torchaudio
-
-// Untuk Linux:
-pip install torch torchvision torchaudio
-```
-
 ## Usage
 
 ```sh
