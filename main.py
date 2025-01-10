@@ -8,7 +8,7 @@ import tempfile
 absl.logging.set_verbosity(absl.logging.ERROR)
 
 # Konfigurasi API Key untuk Gemini
-genai.configure(api_key="AIzaSyDAFEmLIkWNmaXhGns0UaK2HNgpnJ1RNYM")  # Ganti dengan API key kamu!
+genai.configure(api_key="sisisi")  # Ganti dengan API key kamu!
 
 
 def recognize_speech():
