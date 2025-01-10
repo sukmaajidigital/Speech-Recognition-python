@@ -1,60 +1,73 @@
-# Speech-Recognition-python
+# Speech Recognition with GPT-J
 
-A simple AI-powered voice assistant built with Python, Hugging Face API, and speech recognition.
+This project demonstrates a speech recognition application using the GPT-J model from Hugging Face. The application listens to your speech, converts it to text, generates a response using the GPT-J model, and speaks the response back to you.
+
+## Table of Contents
+
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Acknowledgments](#acknowledgments)
 
 ## Features
 
-- Speech-to-text using Google Speech Recognition.
-- AI-powered responses from Hugging Face's GPT-J.
-- Text-to-speech using gTTS.
+- Speech-to-text conversion using Google's Speech Recognition API.
+- Text-to-speech conversion using Google's Text-to-Speech API.
+- Response generation using the GPT-J model from Hugging Face.
+- Local model loading and inference using the `transformers` library.
 
 ## Requirements
 
-- Python 3.8+
-- HUGGINGFACE API key
+- `Python 3.7` or later
+- `PyTorch` (for model inference)
+- `transformers` library
+- `speech_recognition` library
+- `gtts` library
+- `python-dotenv` library
 
 ## Installation
 
-1. Clone this repository:
+1. **Clone the Repository**:
 
-```bash
+```sh
    git clone https://github.com/sukmaajidigital/Speech-Recognition-python.git
    cd Speech-Recognition-python
-   Install dependencies:
 ```
 
-```bash
-pip install -r requirements.txt
-Run the assistant:
-```
+2. **Create a Virtual Environment:**
+   python -m venv .venv
 
-```bash
+3. **Activate the Virtual Environment:**
 
-python main.py
-```
+- On Windows:
 
----
-
-### **Langkah-Langkah Instalasi**
-
-1. **Persiapkan Virtual Environment:**
-
-```bash
-   python -m venv venv
-   source venv/bin/activate  # Untuk macOS/Linux
-   venv\Scripts\activate     # Untuk Windows
+```sh
+.venv\Scripts\activate
 
 ```
 
-2. **Install Dependencies:**
+- On Bash/linux
 
-```bash
+```sh
+source .venv/bin/activate
+
+```
+
+4. **Install Dependencies:**
+
+```sh
 pip install -r requirements.txt
 
 ```
 
-3. **Jalankan Program:**
+## Usage
 
-```bash
+```sh
 python main.py
 ```
+
+## Acknowledgments
+
+- [Hugging Face](https://huggingface.co) for the GPT-J model and transformers library.
+- [Google](https://cloud.google.com/speech-to-text) for the Speech Recognition and [Google Text-to-Speech](https://cloud.google.com/text-to-speech) APIs.

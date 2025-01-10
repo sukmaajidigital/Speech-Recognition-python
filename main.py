@@ -1,35 +1,18 @@
 import os
-import requests
-from dotenv import load_dotenv
 import speech_recognition as sr
 from gtts import gTTS
+from transformers import AutoTokenizer, AutoModelForCausalLM
 
-# Memuat variabel dari file .env
-load_dotenv()
-HUGGINGFACE_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
+# Memuat tokenizer dan model
+tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-j-6B")
+model = AutoModelForCausalLM.from_pretrained("EleutherAI/gpt-j-6B")
 
-# Memastikan API key tersedia
-if not HUGGINGFACE_API_KEY:
-    raise ValueError("API key dari Hugging Face tidak ditemukan. Pastikan .env sudah terisi dengan benar.")
-
-GPTJ_API_URL = "https://api-inference.huggingface.co/models/EleutherAI/gpt-j-6B"
-
-# Fungsi untuk menghasilkan respons dari API GPT-J
+# Fungsi untuk menghasilkan respons dari model
 def generate_response(prompt):
-    headers = {"Authorization": f"Bearer {HUGGINGFACE_API_KEY}"}
-    payload = {"inputs": prompt}
-    try:
-        response = requests.post(GPTJ_API_URL, headers=headers, json=payload)
-        response.raise_for_status()  # Akan memunculkan exception jika status code bukan 200
-        data = response.json()
-        
-        # Mengecek apakah data yang diterima sesuai
-        if "generated_text" in data[0]:
-            return data[0]["generated_text"]
-        else:
-            return "Tidak ada teks yang dihasilkan oleh model."
-    except Exception as e:
-        return f"Terjadi kesalahan saat menghasilkan respons: {e}"
+    inputs = tokenizer(prompt, return_tensors="pt")
+    outputs = model.generate(**inputs)
+    response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+    return response
 
 # Fungsi untuk mengonversi suara menjadi teks
 def transcribe_speech_to_text():
@@ -51,7 +34,7 @@ def transcribe_speech_to_text():
 def speak_text(text):
     tts = gTTS(text, lang="id", slow=False)  # slow=False untuk suara yang lebih cepat
     tts.save("response.mp3")
-    
+
     # Memeriksa sistem operasi dan memutar file audio sesuai dengan platform
     if os.name == "nt":
         os.system("start response.mp3")  # Windows
