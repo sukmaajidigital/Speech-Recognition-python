@@ -64,7 +64,7 @@ pip install -r requirements.txt
 ## Usage
 
 ```sh
-python main.py
+python app.py
 ```
 
 ## Acknowledgments

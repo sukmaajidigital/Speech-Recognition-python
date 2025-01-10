@@ -6,7 +6,6 @@ import os
 import absl.logging
 from gtts import gTTS
 import subprocess
-from aplikasi import APLIKASI
 
 load_dotenv()
 
@@ -17,7 +16,7 @@ if not API_KEY:
     raise ValueError("API Key untuk Google Gemini tidak ditemukan di .env file.")
 genai.configure(api_key=API_KEY)
 
-MAX_RESPONSE_LENGTH = 150
+MAX_RESPONSE_LENGTH = 100
 
 def speak(text, language="id"):
     try:
@@ -33,7 +32,7 @@ def recognize_speech():
     with sr.Microphone() as source:
         print("Monggo...")
         try:
-            audio = recognizer.listen(source, timeout=10, phrase_time_limit=10)
+            audio = recognizer.listen(source, timeout=5, phrase_time_limit=10)
             print("Mikir Sek ...")
             text = recognizer.recognize_google(audio, language="id-ID")
             print(f"Bos: {text}")
@@ -82,30 +81,17 @@ def check_and_speak(answer):
         print(f"babu: {answer}")
         speak(answer)
 
-def open_application(app_name):
-    app_path = APLIKASI.get(app_name)
-    if app_path:
-        try:
-            subprocess.run([app_path], check=False)  ##false untuk tidak usah check
-            speak(f"Membuka {app_name}")
-        except Exception as e:
-            print(f"Kesalahan saat membuka {app_name}: {e}")
-            speak(f"Maaf, saya tidak bisa membuka {app_name}.")
-    else:
-        speak(f"Aplikasi {app_name} tidak tersedia.")
-        
 if __name__ == "__main__":
     print("Pripun Bos?")
     speak("Pripun Boskuh?")
     try:
         while True:
+            # Mendengarkan input suara
             query = recognize_speech()
             if query:
-                if "buka" in query:
-                    app_name = query.replace("buka", "").strip()  # Mengambil nama aplikasi setelah kata "buka"
-                    open_application(app_name)
-                elif "wes wes cukup" in query:
-                    print("Suwun Boskuhh.")
+                if "wes wes cukup" in query:
+                    print("Sampun. Suwun.")
+                    speak("Suwun Boskuhhh!")
                     break 
                 else:
                     answer = process_query(query)
