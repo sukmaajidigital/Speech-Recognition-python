@@ -75,7 +75,7 @@ def process_query(query):
 
 def check_and_speak(answer):
     if len(answer) > MAX_RESPONSE_LENGTH:
-        short_answer = "Ketemu monggo diwoco piyambak." 
+        short_answer = "Ketemu monggo diwo co piyambak." 
         print(f"babu: {answer}")
         speak(short_answer)
     else:
@@ -86,7 +86,7 @@ def open_application(app_name):
     app_path = APLIKASI.get(app_name)
     if app_path:
         try:
-            subprocess.run([app_path], check=False)  ##false untuk tidak usah check
+            subprocess.run([app_path], check=True)
             speak(f"Membuka {app_name}")
         except Exception as e:
             print(f"Kesalahan saat membuka {app_name}: {e}")
