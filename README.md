@@ -1,5 +1,6 @@
 # Speech Recognition with GEMINI
-
+## main application
+[app.py](app.py)
 ## Table of Contents
 
 - [Features](#features)
@@ -17,8 +18,6 @@
 ## Requirements
 
 - `Python 3.7` or later
-- `PyTorch` (for model inference)
-- `transformers` library
 - `speech_recognition` library
 - `gtts` library
 - `python-dotenv` library
@@ -66,5 +65,4 @@ python app.py
 
 ## Acknowledgments
 
-- [Hugging Face](https://huggingface.co) for the GPT-J model and transformers library.
 - [Google](https://cloud.google.com/speech-to-text) for the Speech Recognition and [Google Text-to-Speech](https://cloud.google.com/text-to-speech) APIs.
