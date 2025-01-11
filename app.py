@@ -7,6 +7,7 @@ import absl.logging
 from gtts import gTTS
 import subprocess
 from aplikasi import APLIKASI
+from datetime import datetime
 
 load_dotenv()
 
@@ -72,27 +73,52 @@ def process_query(query):
     except Exception as e:
         print(f"Kesalahan saat memproses query: {e}")
         return "Maaf, ada masalah saat memproksikan permintaanmu."
+    
+def save_response_to_file(response, filename="responses.txt"):
+    try:
+        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        formatted_response = (
+            "============================================\n"
+            f"Tanggal dan Jam: {current_time}\n"
+            "============================================\n"
+            f"{response}\n"
+            "============================================\n\n"
+        )
+        with open(filename, "a", encoding="utf-8") as file:
+            file.write(formatted_response)
+    except Exception as e:
+        print(f"Kesalahan saat menyimpan respons: {e}")
 
 def check_and_speak(answer):
     if len(answer) > MAX_RESPONSE_LENGTH:
         short_answer = "Ketemu monggo diwo co piyambak." 
         print(f"babu: {answer}")
+        save_response_to_file(answer) 
         speak(short_answer)
     else:
         print(f"babu: {answer}")
+        save_response_to_file(answer) 
         speak(answer)
 
 def open_application(app_name):
     app_path = APLIKASI.get(app_name)
     if app_path:
         try:
-            subprocess.Popen([app_path], shell=True)  # this code will open the app
-            speak(f"Membuka {app_name}")
+            subprocess.Popen([app_path], shell=True)  # Menggunakan Popen agar tidak menunggu aplikasi ditutup
+            response = f"Membuka {app_name}"
+            print(response)
+            save_response_to_file(response)  # Simpan respons ke file
+            speak(response)
         except Exception as e:
-            print(f"Kesalahan saat membuka {app_name}: {e}")
+            error_response = f"Kesalahan saat membuka {app_name}: {e}"
+            print(error_response)
+            save_response_to_file(error_response)  # Simpan pesan kesalahan ke file
             speak(f"Maaf, saya tidak bisa membuka {app_name}.")
     else:
-        speak(f"Aplikasi {app_name} tidak tersedia.")
+        not_found_response = f"Aplikasi {app_name} tidak tersedia."
+        print(not_found_response)
+        save_response_to_file(not_found_response)  # Simpan pesan aplikasi tidak ditemukan ke file
+        speak(not_found_response)
         
 if __name__ == "__main__":
     print("Pripun Bos?")

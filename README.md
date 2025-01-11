@@ -1,6 +1,4 @@
-# Speech Recognition with GPT-J
-
-This project demonstrates a speech recognition application using the GPT-J model from Hugging Face. The application listens to your speech, converts it to text, generates a response using the GPT-J model, and speaks the response back to you.
+# Speech Recognition with GEMINI
 
 ## Table of Contents
 
@@ -14,8 +12,7 @@ This project demonstrates a speech recognition application using the GPT-J model
 
 - Speech-to-text conversion using Google's Speech Recognition API.
 - Text-to-speech conversion using Google's Text-to-Speech API.
-- Response generation using the GPT-J model from Hugging Face.
-- Local model loading and inference using the `transformers` library.
+- Response generation using the GEMINI model.
 
 ## Requirements
 
