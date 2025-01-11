@@ -86,7 +86,7 @@ def open_application(app_name):
     app_path = APLIKASI.get(app_name)
     if app_path:
         try:
-            subprocess.run([app_path], check=True)
+            subprocess.Popen([app_path], shell=True)  # Menggunakan Popen agar tidak menunggu aplikasi ditutup
             speak(f"Membuka {app_name}")
         except Exception as e:
             print(f"Kesalahan saat membuka {app_name}: {e}")
